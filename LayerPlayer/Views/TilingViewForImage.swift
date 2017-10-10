@@ -36,6 +36,8 @@ let fileName = "windingRoad"
 class TilingViewForImage: UIView {
   
   let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0] as String
+
+  // Helper variable to prevent `draw(rect:)` from accessing `bounds` on a global queue
   var currentBounds = CGRect.zero
   
   override class var layerClass : AnyClass {

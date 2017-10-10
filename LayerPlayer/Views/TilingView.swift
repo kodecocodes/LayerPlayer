@@ -33,9 +33,11 @@ import UIKit
 class TilingView: UIView {
   
   let sideLength = CGFloat(100.0)
-    var offset: CGFloat = 0
-    var x: CGFloat = 0
-    var y: CGFloat = 0
+    
+  // Helper variables to prevent `draw(rect:)` from accessing `bounds` on a global queue
+  var offset: CGFloat = 0
+  var x: CGFloat = 0
+  var y: CGFloat = 0
   
   override class var layerClass : AnyClass {
     return TiledLayer.self
