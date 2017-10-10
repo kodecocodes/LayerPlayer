@@ -36,6 +36,9 @@ let fileName = "windingRoad"
 class TilingViewForImage: UIView {
   
   let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0] as String
+
+  // Helper variable to prevent `draw(rect:)` from accessing `bounds` on a global queue
+  var currentBounds = CGRect.zero
   
   override class var layerClass : AnyClass {
     return TiledLayer.self
@@ -47,6 +50,12 @@ class TilingViewForImage: UIView {
     layer.contentsScale = UIScreen.main.scale
     layer.tileSize = CGSize(width: sideLength, height: sideLength)
   }
+    
+   override func layoutSubviews() {
+      super.layoutSubviews()
+    
+      currentBounds = self.bounds
+   }
   
   override func draw(_ rect: CGRect) {
     let firstColumn = Int(rect.minX / sideLength)
@@ -62,7 +71,7 @@ class TilingViewForImage: UIView {
           let point = CGPoint(x: x, y: y)
           let size = CGSize(width: sideLength, height: sideLength)
           var tileRect = CGRect(origin: point, size: size)
-          tileRect = bounds.intersection(tileRect)
+          tileRect = currentBounds.intersection(tileRect)
           tile.draw(in: tileRect)
         }
       }
