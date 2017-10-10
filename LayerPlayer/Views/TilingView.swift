@@ -33,6 +33,9 @@ import UIKit
 class TilingView: UIView {
   
   let sideLength = CGFloat(100.0)
+    var offset: CGFloat = 0
+    var x: CGFloat = 0
+    var y: CGFloat = 0
   
   override class var layerClass : AnyClass {
     return TiledLayer.self
@@ -45,20 +48,26 @@ class TilingView: UIView {
     layer.contentsScale = UIScreen.main.scale
     layer.tileSize = CGSize(width: sideLength, height: sideLength)
   }
+    
+  override func layoutSubviews() {
+        super.layoutSubviews()
+    
+        let scale = UIScreen.main.scale
+        x = bounds.origin.x
+        y = bounds.origin.y
+        offset = bounds.width / sideLength * (scale == 3 ? 2 : scale)
+    }
   
   override func draw(_ rect: CGRect) {
     let context = UIGraphicsGetCurrentContext()
     let scale = UIScreen.main.scale
     
     var red = CGFloat(drand48())
-    var green = CGFloat(drand48())
+    var green = CGFloat(drand48())  
     var blue = CGFloat(drand48())
     context?.setFillColor(red: red, green: green, blue: blue, alpha: 1.0)
     context?.fill(rect)
     
-    let x = bounds.origin.x
-    let y = bounds.origin.y
-    let offset = bounds.width / sideLength * (scale == 3 ? 2 : scale)
     context?.move(to: CGPoint(x: x + 9.0 * offset, y: y + 43.0 * offset))
     context?.addLine(to: CGPoint(x: x + 18.06 * offset, y: y + 22.6 * offset))
     context?.addLine(to: CGPoint(x: x + 25.0 * offset, y: y + 7.5 * offset))
