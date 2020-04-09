@@ -30,14 +30,34 @@
 import UIKit
 
 class CAEmitterLayerViewController: UIViewController {
-  
   @IBOutlet weak var viewForEmitterLayer: UIView!
   
   @objc var emitterLayer = CAEmitterLayer()
   @objc var emitterCell = CAEmitterCell()
   
-  // MARK: - Quick reference
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    setUpEmitterCell()
+    resetEmitterCells()
+    setUpEmitterLayer()
+    viewForEmitterLayer.layer.addSublayer(emitterLayer)
+  }
   
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let identifier = segue.identifier {
+      switch identifier {
+      case "DisplayEmitterControls":
+        emitterLayer.renderMode = .additive
+        (segue.destination as? CAEmitterLayerControlsViewController)?.emitterLayerViewController = self
+      default:
+        break
+      }
+    }
+  }
+}
+
+// MARK: - Quick reference
+extension CAEmitterLayerViewController {
   func setUpEmitterLayer() {
     emitterLayer.frame = viewForEmitterLayer.bounds
     emitterLayer.seed = UInt32(Date().timeIntervalSince1970)
@@ -76,31 +96,10 @@ class CAEmitterLayerViewController: UIViewController {
     emitterCell.xAcceleration = -750.0
     emitterCell.yAcceleration = 0.0
   }
-  
-  // MARK: - View life cycle
-  
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    setUpEmitterCell()
-    resetEmitterCells()
-    setUpEmitterLayer()
-    viewForEmitterLayer.layer.addSublayer(emitterLayer)
-  }
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if let identifier = segue.identifier {
-      switch identifier {
-      case "DisplayEmitterControls":
-        emitterLayer.renderMode = kCAEmitterLayerAdditive
-        (segue.destination as? CAEmitterLayerControlsViewController)?.emitterLayerViewController = self
-      default:
-        break
-      }
-    }
-  }
-  
-  // MARK: - Triggered actions
-  
+}
+
+// MARK: - Triggered actions
+extension CAEmitterLayerViewController {
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     if let location = touches.first?.location(in: viewForEmitterLayer) {
       emitterLayer.emitterPosition = location
@@ -113,11 +112,8 @@ class CAEmitterLayerViewController: UIViewController {
     }
   }
   
-  // MARK: - Helpers
-  
   func resetEmitterCells() {
     emitterLayer.emitterCells = nil
     emitterLayer.emitterCells = [emitterCell]
   }
-  
 }

@@ -56,7 +56,7 @@ class TilingViewForImage: UIView {
     
     for row in firstRow...lastRow {
       for column in firstColumn...lastColumn {
-        if let tile = imageForTileAtColumn(column, row: row) {
+        if let tile = imageForTile(atColumn: column, row: row) {
           let x = sideLength * CGFloat(column)
           let y = sideLength * CGFloat(row)
           let point = CGPoint(x: x, y: y)
@@ -69,7 +69,7 @@ class TilingViewForImage: UIView {
     }
   }
   
-  func imageForTileAtColumn(_ column: Int, row: Int) -> UIImage? {
+  func imageForTile(atColumn column: Int, row: Int) -> UIImage? {
     let filePath = "\(cachesPath)/\(fileName)_\(column)_\(row)"
     return UIImage(contentsOfFile: filePath)
   }

@@ -31,9 +31,6 @@
 import UIKit
 
 class CAReplicatorLayerViewController: UIViewController {
-  
-  // FIXME: Unsatisfiable constraints in compact width, any height (e.g., iPhone in landscape)
-  
   @IBOutlet weak var viewForReplicatorLayer: UIView!
   @IBOutlet weak var layerSizeSlider: UISlider!
   @IBOutlet weak var layerSizeSliderValueLabel: UILabel!
@@ -52,8 +49,28 @@ class CAReplicatorLayerViewController: UIViewController {
   let instanceLayer = CALayer()
   let fadeAnimation = CABasicAnimation(keyPath: "opacity")
   
-  // MARK: - Quick reference
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setUpReplicatorLayer()
+    viewForReplicatorLayer.layer.addSublayer(replicatorLayer)
+    setUpInstanceLayer()
+    replicatorLayer.addSublayer(instanceLayer)
+    setUpLayerFadeAnimation()
+    instanceDelaySliderChanged(instanceDelaySlider)
+    updateLayerSizeSliderValueLabel()
+    updateInstanceCountSliderValueLabel()
+    updateInstanceDelaySliderValueLabel()
+  }
   
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    setUpReplicatorLayer()
+    setUpInstanceLayer()
+  }
+}
+
+// MARK: - Quick reference
+extension CAReplicatorLayerViewController {
   func setUpReplicatorLayer() {
     replicatorLayer.frame = viewForReplicatorLayer.bounds
     let count = instanceCountSlider.value
@@ -80,30 +97,10 @@ class CAReplicatorLayerViewController: UIViewController {
     fadeAnimation.toValue = 0.0
     fadeAnimation.repeatCount = Float(Int.max)
   }
+}
   
-  // MARK: - View life cycle
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setUpReplicatorLayer()
-    viewForReplicatorLayer.layer.addSublayer(replicatorLayer)
-    setUpInstanceLayer()
-    replicatorLayer.addSublayer(instanceLayer)
-    setUpLayerFadeAnimation()
-    instanceDelaySliderChanged(instanceDelaySlider)
-    updateLayerSizeSliderValueLabel()
-    updateInstanceCountSliderValueLabel()
-    updateInstanceDelaySliderValueLabel()
-  }
-  
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    setUpReplicatorLayer()
-    setUpInstanceLayer()
-  }
-  
-  // MARK: - IBActions
-  
+// MARK: - IBActions
+extension CAReplicatorLayerViewController {
   @IBAction func layerSizeSliderChanged(_ sender: UISlider) {
     let value = CGFloat(sender.value)
     instanceLayer.bounds = CGRect(origin: CGPoint.zero, size: CGSize(width: value, height: value * lengthMultiplier))
@@ -143,17 +140,19 @@ class CAReplicatorLayerViewController: UIViewController {
       break
     }
   }
-  
-  // MARK: - Triggered actions
-  
+}
+
+// MARK: - Triggered actions
+extension CAReplicatorLayerViewController {
   func setLayerFadeAnimation() {
     instanceLayer.opacity = 0.0
     fadeAnimation.duration = CFTimeInterval(instanceDelaySlider.value)
     instanceLayer.add(fadeAnimation, forKey: "FadeAnimation")
   }
-  
-  // MARK: - Helpers
-  
+}
+
+// MARK: - Helpers
+extension CAReplicatorLayerViewController {
   func offsetValueForSwitch(_ offsetSwitch: UISwitch) -> Float {
     if offsetSwitch == offsetAlphaSwitch {
       let count = Float(replicatorLayer.instanceCount)
@@ -175,5 +174,4 @@ class CAReplicatorLayerViewController: UIViewController {
   func updateInstanceDelaySliderValueLabel() {
     instanceDelaySliderValueLabel.text = String(format: "%.0f", instanceDelaySlider.value)
   }
-  
 }

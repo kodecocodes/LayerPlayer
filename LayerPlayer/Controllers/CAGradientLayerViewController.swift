@@ -31,7 +31,6 @@
 import UIKit
 
 class CAGradientLayerViewController: UIViewController {
-  
   @IBOutlet weak var viewForGradientLayer: UIView!
   @IBOutlet weak var startPointSlider: UISlider!
   @IBOutlet weak var startPointSliderValueLabel: UILabel!
@@ -42,25 +41,33 @@ class CAGradientLayerViewController: UIViewController {
   @IBOutlet var locationSliderValueLabels: [UILabel]!
   
   let gradientLayer = CAGradientLayer()
-  var colors = [AnyObject]()
+  let colors: [CGColor] = [UIColor(red: 209, green: 0, blue: 0),
+                           UIColor(red: 255, green: 102, blue: 34),
+                           UIColor(red: 255, green: 218, blue: 33),
+                           UIColor(red: 51, green: 221, blue: 0),
+                           UIColor(red: 17, green: 51, blue: 204),
+                           UIColor(red: 34, green: 0, blue: 102),
+                           UIColor(red: 51, green: 0, blue: 68)]
+    .map { $0.cgColor }
+  
   let locations: [Float] = [0, 1/6.0, 1/3.0, 0.5, 2/3.0, 5/6.0, 1.0]
   
-  // MARK: - Quick reference
-  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    sortOutletCollections()
+    setUpGradientLayer()
+    viewForGradientLayer.layer.addSublayer(gradientLayer)
+    setUpLocationSliders()
+    updateLocationSliderValueLabels()
+  }
+}
+
+// MARK: - Quick reference
+extension CAGradientLayerViewController {
   func sortOutletCollections() {
     colorSwitches.sortUIViewsInPlaceByTag()
     locationSliders.sortUIViewsInPlaceByTag()
     locationSliderValueLabels.sortUIViewsInPlaceByTag()
-  }
-  
-  func setUpColors() {
-    colors = [cgColorForRed(209.0, green: 0.0, blue: 0.0),
-      cgColorForRed(255.0, green: 102.0, blue: 34.0),
-      cgColorForRed(255.0, green: 218.0, blue: 33.0),
-      cgColorForRed(51.0, green: 221.0, blue: 0.0),
-      cgColorForRed(17.0, green: 51.0, blue: 204.0),
-      cgColorForRed(34.0, green: 0.0, blue: 102.0),
-      cgColorForRed(51.0, green: 0.0, blue: 68.0)]
   }
   
   func setUpGradientLayer() {
@@ -78,21 +85,10 @@ class CAGradientLayerViewController: UIViewController {
       slider.value = locations[index]
     }
   }
+}
   
-  // MARK: - View life cycle
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    sortOutletCollections()
-    setUpColors()
-    setUpGradientLayer()
-    viewForGradientLayer.layer.addSublayer(gradientLayer)
-    setUpLocationSliders()
-    updateLocationSliderValueLabels()
-  }
-  
-  // MARK: - @IBActions
-  
+// MARK: - @IBActions
+extension CAGradientLayerViewController {
   @IBAction func startPointSliderChanged(_ sender: UISlider) {
     gradientLayer.startPoint = CGPoint(x: CGFloat(sender.value), y: 0.0)
     updateStartAndEndPointValueLabels()
@@ -142,9 +138,10 @@ class CAGradientLayerViewController: UIViewController {
     gradientLayer.locations = gradientLayerLocations
     updateLocationSliderValueLabels()
   }
-  
-  // MARK: - Triggered actions
-  
+}
+
+// MARK: - Triggered actions
+extension CAGradientLayerViewController {
   func updateStartAndEndPointValueLabels() {
     startPointSliderValueLabel.text = String(format: "(%.1f, 0.0)", startPointSlider.value)
     endPointSliderValueLabel.text = String(format: "(%.1f, 1.0)", endPointSlider.value)
@@ -163,11 +160,11 @@ class CAGradientLayerViewController: UIViewController {
       }
     }
   }
-  
-  // MARK: - Helpers
-  
-  func cgColorForRed(_ red: CGFloat, green: CGFloat, blue: CGFloat) -> AnyObject {
-    return UIColor(red: red/255.0, green: green/255.0, blue: blue/255.0, alpha: 1.0).cgColor as AnyObject
+}
+
+// MARK: - Helpers
+private extension UIColor {
+  convenience init(red: Int, green: Int, blue: Int) {
+    self.init(red: CGFloat(red)/255.0, green: CGFloat(green)/255.0, blue: CGFloat(blue)/255.0, alpha: 1)
   }
-  
 }

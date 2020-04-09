@@ -31,7 +31,6 @@ import UIKit
 import AVFoundation
 
 class AVPlayerLayerViewController: UIViewController {
-  
   @IBOutlet weak var viewForPlayerLayer: UIView!
   @IBOutlet weak var playButton: UIButton!
   @IBOutlet weak var rateSegmentedControl: UISegmentedControl!
@@ -49,19 +48,7 @@ class AVPlayerLayerViewController: UIViewController {
   var rateBeforePause: Float?
   var shouldLoop = true
   var isPlaying = false
-  
-  // MARK: - Quick reference
-  
-  func setUpPlayerLayer() {
-    playerLayer.frame = viewForPlayerLayer.bounds
-    let url = Bundle.main.url(forResource: "colorfulStreak", withExtension: "m4v")!
-    let player = AVPlayer(url: url)
-    player.actionAtItemEnd = .none
-    playerLayer.player = player
-  }
-  
-  // MARK: - View life cycle
-  
+    
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpPlayerLayer()
@@ -72,9 +59,21 @@ class AVPlayerLayerViewController: UIViewController {
   deinit {
     NotificationCenter.default.removeObserver(self)
   }
-  
-  // MARK: - IBActions
-  
+}
+
+// MARK: - Quick reference
+extension AVPlayerLayerViewController {
+  func setUpPlayerLayer() {
+    playerLayer.frame = viewForPlayerLayer.bounds
+    let url = Bundle.main.url(forResource: "colorfulStreak", withExtension: "m4v")!
+    let player = AVPlayer(url: url)
+    player.actionAtItemEnd = .none
+    playerLayer.player = player
+  }
+}
+ 
+// MARK: - IBActions
+extension AVPlayerLayerViewController {
   @IBAction func playButtonTapped(_ sender: UIButton) {
     play()
   }
@@ -110,9 +109,10 @@ class AVPlayerLayerViewController: UIViewController {
   @IBAction func volumeSliderChanged(_ sender: UISlider) {
     player.volume = sender.value
   }
-  
-  // MARK: - Triggered actions
-  
+}
+
+// MARK: - Triggered actions
+extension AVPlayerLayerViewController {
   func play() {
     if playButton.titleLabel?.text == "Play" {
       if let resumeRate = rateBeforePause {
@@ -134,7 +134,7 @@ class AVPlayerLayerViewController: UIViewController {
   
     @objc func playerDidReachEndNotificationHandler(_ notification: Notification) {
     guard let playerItem = notification.object as? AVPlayerItem else { return }
-    playerItem.seek(to: kCMTimeZero, completionHandler: nil)
+    playerItem.seek(to: CMTime.zero, completionHandler: nil)
     
     if shouldLoop == false {
       player.pause()
@@ -143,32 +143,33 @@ class AVPlayerLayerViewController: UIViewController {
       updateRateSegmentedControl()
     }
   }
-  
-  // MARK: - Helpers
-  
+}
+
+// MARK: - Helpers
+extension AVPlayerLayerViewController {
   func updatePlayButtonTitle() {
     if isPlaying {
-      playButton.setTitle("Pause", for: UIControlState())
+      playButton.setTitle("Pause", for: .normal)
     } else {
-      playButton.setTitle("Play", for: UIControlState())
+      playButton.setTitle("Play", for: .normal)
     }
   }
   
   func updateRateSegmentedControl() {
-    if isPlaying {
-      switch player.rate {
-      case 0.5:
-        rateSegmentedControl.selectedSegmentIndex = Rate.slowForward.rawValue
-      case 1.0:
-        rateSegmentedControl.selectedSegmentIndex = Rate.normal.rawValue
-      case 2.0:
-        rateSegmentedControl.selectedSegmentIndex = Rate.fastForward.rawValue
-      default:
-        break
-      }
-    } else {
-      rateSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
+    guard isPlaying else {
+      rateSegmentedControl.selectedSegmentIndex = UISegmentedControl.noSegment
+      return
+    }
+    
+    switch player.rate {
+    case 0.5:
+      rateSegmentedControl.selectedSegmentIndex = Rate.slowForward.rawValue
+    case 1.0:
+      rateSegmentedControl.selectedSegmentIndex = Rate.normal.rawValue
+    case 2.0:
+      rateSegmentedControl.selectedSegmentIndex = Rate.fastForward.rawValue
+    default:
+      break
     }
   }
-  
 }

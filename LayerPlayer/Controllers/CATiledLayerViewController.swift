@@ -30,8 +30,7 @@
 
 import UIKit
 
-class CATiledLayerViewController: UIViewController, UIScrollViewDelegate {
-  
+class CATiledLayerViewController: UIViewController {
   @IBOutlet weak var tiledImageLayerButton: UIBarButtonItem!
   @IBOutlet weak var zoomLabel: UILabel!
   @IBOutlet weak var scrollView: UIScrollView!
@@ -50,9 +49,7 @@ class CATiledLayerViewController: UIViewController, UIScrollViewDelegate {
   var tiledLayer: TiledLayer {
     return viewForTiledLayer.layer as! TiledLayer
   }
-  
-  // MARK: - View life cycle
-  
+    
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpTileImageLayerButton()
@@ -67,9 +64,10 @@ class CATiledLayerViewController: UIViewController, UIScrollViewDelegate {
   deinit {
     TiledLayer.setFadeDuration(CFTimeInterval(0.25))
   }
-  
-  // MARK: - IBActions
-    
+}
+
+// MARK: - IBActions
+extension CATiledLayerViewController {
   @IBAction func fadeDurationSliderChanged(_ sender: UISlider) {
     TiledLayer.setFadeDuration(CFTimeInterval(sender.value))
     updateFadeDurationSliderValueLabel()
@@ -117,11 +115,12 @@ class CATiledLayerViewController: UIViewController, UIScrollViewDelegate {
     scrollView.zoomScale = CGFloat(sender.value)
     updateZoomScaleSliderValueLabel()
   }
-  
-  // MARK: - Helpers
-  
+}
+
+// MARK: - Helpers
+extension CATiledLayerViewController {
   func setUpTileImageLayerButton() {
-    tiledImageLayerButton.setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "LayerPlayer", size: 23.0)!], for: UIControlState())
+    tiledImageLayerButton.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "LayerPlayer", size: 23.0)!], for: .normal)
   }
   
   func updateFadeDurationSliderValueLabel() {
@@ -143,9 +142,10 @@ class CATiledLayerViewController: UIViewController, UIScrollViewDelegate {
   func updateZoomScaleSliderValueLabel() {
     zoomScaleSliderValueLabel.text = "\(Int(scrollView.zoomScale))"
   }
-  
-  // MARK: UIScrollViewDelegate
-  
+}
+
+// MARK: UIScrollViewDelegate
+extension CATiledLayerViewController: UIScrollViewDelegate {
   func viewForZooming(in scrollView: UIScrollView) -> UIView? {
     return viewForTiledLayer
   }
