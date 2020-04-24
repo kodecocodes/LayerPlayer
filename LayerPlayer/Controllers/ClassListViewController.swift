@@ -29,28 +29,18 @@
 import UIKit
 
 class ClassListViewController: UITableViewController {
-  let classes: [(String, String)] = [
-    ("CALayer", "Manage and animate visual content"),
-    ("CAScrollLayer", "Display portion of a scrollable layer"),
-    ("CATextLayer", "Render plain text or attributed strings"),
-    ("AVPlayerLayer", "Display an AV player "),
-    ("CAGradientLayer", "Apply a color gradient over the background"),
-    ("CAReplicatorLayer", "Duplicate a source layer"),
-    ("CATiledLayer", "Asynchronously draw layer content in tiles"),
-    ("CAShapeLayer", "Draw using scalable vector paths"),
-    ("CAEAGLLayer", "Draw OpenGL content"),
-    ("CATransformLayer", "Draw 3D structures"),
-    ("CAEmitterLayer", "Render animated particles")
+  let classes: [ClassDescription] = [
+    ClassDescription(title: "CALayer", description: "Manage and animate visual content"),
+    ClassDescription(title: "CAScrollLayer", description: "Display portion of a scrollable layer"),
+    ClassDescription(title: "CATextLayer", description: "Render plain text or attributed strings"),
+    ClassDescription(title: "AVPlayerLayer", description: "Display an AV player"),
+    ClassDescription(title: "CAGradientLayer", description: "Apply a color gradient over the background"),
+    ClassDescription(title: "CAReplicatorLayer", description: "Duplicate a source layer"),
+    ClassDescription(title: "CATiledLayer", description: "Asynchronously draw layer content in tiles"),
+    ClassDescription(title: "CAShapeLayer", description: "Draw using scalable vector paths"),
+    ClassDescription(title: "CATransformLayer", description: "Draw 3D structures"),
+    ClassDescription(title: "CAEmitterLayer", description: "Render animated particles"),
   ]
-  
-  var navController: UINavigationController!
-  var detailViewController: UIViewController!
-  var collapseDetailViewController = true
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    splitViewController?.delegate = self
-  }
 }
 
 // MARK: - UITableViewDataSource
@@ -60,11 +50,11 @@ extension ClassListViewController {
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "ClassCell")!
-    let row = indexPath.row
-    cell.textLabel?.text = classes[row].0
-    cell.detailTextLabel?.text = classes[row].1
-    cell.imageView?.image = UIImage(named: classes[row].0)
+    let cell = tableView.dequeueReusableCell(withIdentifier: "ClassCell", for: indexPath)
+    let classDescription = classes[indexPath.row]
+    cell.textLabel?.text = classDescription.title
+    cell.detailTextLabel?.text = classDescription.description
+    cell.imageView?.image = UIImage(named: classDescription.title)
     return cell
   }
 }
@@ -72,22 +62,7 @@ extension ClassListViewController {
 // MARK: - UITableViewDelegate
 extension ClassListViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let identifier = classes[indexPath.row].0
-    navController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier) as? UINavigationController
-    detailViewController = navController?.topViewController
-    detailViewController?.navigationItem.leftBarButtonItem = splitViewController!.displayModeButtonItem
-    detailViewController?.navigationItem.leftItemsSupplementBackButton = true
-    splitViewController?.showDetailViewController(navController, sender: nil)
-    collapseDetailViewController = false
+    let identifier = classes[indexPath.row].title
+    performSegue(withIdentifier: identifier, sender: nil)
   }
 }
-
-extension ClassListViewController: UISplitViewControllerDelegate {
-  func splitViewController(_ splitViewController: UISplitViewController,
-                           collapseSecondary secondaryViewController: UIViewController,
-                           onto primaryViewController: UIViewController) -> Bool {
-    return collapseDetailViewController
-  }
-  
-}
-

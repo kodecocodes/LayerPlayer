@@ -42,27 +42,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     UINavigationBar.appearance().tintColor = UIColor.white
     UINavigationBar.appearance().barTintColor = swiftOrangeColor
     UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
-                                                        NSAttributedString.Key.font: UIFont(name: "Avenir-light", size: 20.0)!]
+                                                        NSAttributedString.Key.font: UIFont(name: "Avenir-light", size: 17.0)!]
     UITableView.appearance().separatorColor = swiftOrangeColor
     UITableViewCell.appearance().separatorInset = UIEdgeInsets.zero
     UISwitch.appearance().tintColor = swiftOrangeColor
     UISlider.appearance().tintColor = swiftOrangeColor
     UISegmentedControl.appearance().tintColor = swiftOrangeColor
-    
-    let splitViewController = window?.rootViewController as? UISplitViewController
-    
-    // Ensures the initial CALayer detail includes the display mode button, because the row has not been selected yet
-    let navigationController = splitViewController?.viewControllers.last as? UINavigationController
-    let navigationItem = navigationController?.topViewController?.navigationItem
-    navigationItem?.leftBarButtonItem = splitViewController?.displayModeButtonItem
-    navigationItem?.leftItemsSupplementBackButton = true
-    
-    if UIDevice.current.userInterfaceIdiom == .pad {
-      splitViewController?.preferredDisplayMode = .allVisible
-    } else {
-      splitViewController?.preferredPrimaryColumnWidthFraction = 0.3
-    }
-    
+
     let size = CGSize(width: sideLength, height: sideLength)
     UIImage.saveTileOfSize(size, name: fileName)
     
