@@ -32,23 +32,6 @@ class CALayerViewController: UIViewController {
   @IBOutlet weak var viewForLayer: UIView!
   
   let layer = CALayer()
-  let star = UIImage(named: "star")?.cgImage
-  
-  // MARK: - Quick reference
-  func setUpLayer() {
-    layer.frame = viewForLayer.bounds
-    layer.contents = star
-    layer.contentsGravity = .center
-    layer.isGeometryFlipped = false
-    layer.cornerRadius = 100.0
-    layer.borderWidth = 12.0
-    layer.borderColor = UIColor.white.cgColor
-    layer.backgroundColor = swiftOrangeColor.cgColor
-    layer.shadowOpacity = 0.75
-    layer.shadowOffset = CGSize(width: 0, height: 3)
-    layer.shadowRadius = 3.0
-    layer.magnificationFilter = .linear
-  }
   
   // MARK: - View life cycle
   override func viewDidLoad() {
@@ -61,5 +44,23 @@ class CALayerViewController: UIViewController {
     if segue.identifier == "DisplayLayerControls" {
       (segue.destination as? CALayerControlsViewController)?.layerViewController = self
     }
+  }
+}
+
+// MARK: - Layer
+extension CALayerViewController {
+  func setUpLayer() {
+    layer.frame = viewForLayer.bounds
+    layer.contents = UIImage(named: "star")?.cgImage
+    layer.contentsGravity = .center
+    layer.isGeometryFlipped = false
+    layer.cornerRadius = 100.0
+    layer.borderWidth = 12.0
+    layer.borderColor = UIColor.white.cgColor
+    layer.backgroundColor = swiftOrangeColor.cgColor
+    layer.shadowOpacity = 0.75
+    layer.shadowOffset = CGSize(width: 0, height: 3)
+    layer.shadowRadius = 3.0
+    layer.magnificationFilter = .linear
   }
 }

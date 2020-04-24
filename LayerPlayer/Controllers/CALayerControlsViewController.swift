@@ -79,7 +79,7 @@ extension CALayerControlsViewController {
     
     switch theSwitch {
     case .displayContents:
-      layerViewController.layer.contents = sender.isOn ? layerViewController.star : nil
+      layerViewController.layer.contents = sender.isOn ? UIImage(named: "star")?.cgImage : nil
     case .geometryFlipped:
       layerViewController.layer.isGeometryFlipped = sender.isOn
     case .hidden:
