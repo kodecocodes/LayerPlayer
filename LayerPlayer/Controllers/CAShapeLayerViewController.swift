@@ -77,11 +77,11 @@ class CAShapeLayerViewController: UIViewController {
   func setUpShapeLayer() {
     shapeLayer.path = openPath.cgPath
     shapeLayer.fillColor = nil
-    shapeLayer.fillRule = kCAFillRuleNonZero
-    shapeLayer.lineCap = kCALineCapButt
+    shapeLayer.fillRule = .nonZero
+    shapeLayer.lineCap = .butt
     shapeLayer.lineDashPattern = nil
     shapeLayer.lineDashPhase = 0.0
-    shapeLayer.lineJoin = kCALineJoinMiter
+    shapeLayer.lineJoin = .miter
     shapeLayer.lineWidth = CGFloat(lineWidthSlider.value)
     shapeLayer.miterLimit = 4.0
     shapeLayer.strokeColor = color.cgColor
@@ -103,13 +103,13 @@ class CAShapeLayerViewController: UIViewController {
     var selectedSegmentIndex: Int!
     
     if sender.isOn {
-      selectedSegmentIndex = UISegmentedControlNoSegment
+      selectedSegmentIndex = UISegmentedControl.noSegment
       shapeLayer.path = closedPath.cgPath
     } else {
-      switch shapeLayer.lineCap {
-      case kCALineCapButt:
+      switch convertFromCAShapeLayerLineCap(shapeLayer.lineCap) {
+      case convertFromCAShapeLayerLineCap(.butt):
         selectedSegmentIndex = LineCap.butt.rawValue
-      case kCALineCapRound:
+      case convertFromCAShapeLayerLineCap(.round):
         selectedSegmentIndex = LineCap.round.rawValue
       default:
         selectedSegmentIndex = LineCap.square.rawValue
@@ -135,13 +135,13 @@ class CAShapeLayerViewController: UIViewController {
     if sender.isOn {
       shapeLayer.fillColor = color.cgColor
       
-      if shapeLayer.fillRule == kCAFillRuleNonZero {
+      if convertFromCAShapeLayerFillRule(shapeLayer.fillRule) == convertFromCAShapeLayerFillRule(.nonZero) {
         selectedSegmentIndex = FillRule.nonZero.rawValue
       } else {
         selectedSegmentIndex = FillRule.evenOdd.rawValue
       }
     } else {
-      selectedSegmentIndex = UISegmentedControlNoSegment
+      selectedSegmentIndex = UISegmentedControl.noSegment
       shapeLayer.fillColor = nil
     }
     
@@ -151,13 +151,13 @@ class CAShapeLayerViewController: UIViewController {
   @IBAction func fillRuleSegmentedControlChanged(_ sender: UISegmentedControl) {
     fillSwitch.isOn = true
     shapeLayer.fillColor = color.cgColor
-    var fillRule = kCAFillRuleNonZero
+    var fillRule = convertFromCAShapeLayerFillRule(.nonZero)
     
     if sender.selectedSegmentIndex != FillRule.nonZero.rawValue {
-      fillRule = kCAFillRuleEvenOdd
+      fillRule = convertFromCAShapeLayerFillRule(.evenOdd)
     }
     
-    shapeLayer.fillRule = fillRule
+    shapeLayer.fillRule = convertToCAShapeLayerFillRule(fillRule)
   }
   
   @IBAction func lineWidthSliderChanged(_ sender: UISlider) {
@@ -177,33 +177,63 @@ class CAShapeLayerViewController: UIViewController {
   @IBAction func lineCapSegmentedControlChanged(_ sender: UISegmentedControl) {
     closePathSwitch.isOn = false
     shapeLayer.path = openPath.cgPath
-    var lineCap = kCALineCapButt
+    var lineCap = convertFromCAShapeLayerLineCap(.butt)
     
     switch sender.selectedSegmentIndex {
     case LineCap.round.rawValue:
-      lineCap = kCALineCapRound
+      lineCap = convertFromCAShapeLayerLineCap(.round)
     case LineCap.square.rawValue:
-      lineCap = kCALineCapSquare
+      lineCap = convertFromCAShapeLayerLineCap(.square)
     default:
       break
     }
     
-    shapeLayer.lineCap = lineCap
+    shapeLayer.lineCap = convertToCAShapeLayerLineCap(lineCap)
   }
   
   @IBAction func lineJoinSegmentedControlChanged(_ sender: UISegmentedControl) {
-    var lineJoin = kCALineJoinMiter
+    var lineJoin = convertFromCAShapeLayerLineJoin(.miter)
     
     switch sender.selectedSegmentIndex {
     case LineJoin.round.rawValue:
-      lineJoin = kCALineJoinRound
+      lineJoin = convertFromCAShapeLayerLineJoin(.round)
     case LineJoin.bevel.rawValue:
-      lineJoin = kCALineJoinBevel
+      lineJoin = convertFromCAShapeLayerLineJoin(.bevel)
     default:
       break
     }
     
-    shapeLayer.lineJoin = lineJoin
+    shapeLayer.lineJoin = convertToCAShapeLayerLineJoin(lineJoin)
   }
   
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCAShapeLayerLineCap(_ input: CAShapeLayerLineCap) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCAShapeLayerFillRule(_ input: CAShapeLayerFillRule) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCAShapeLayerFillRule(_ input: String) -> CAShapeLayerFillRule {
+	return CAShapeLayerFillRule(rawValue: input)
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCAShapeLayerLineCap(_ input: String) -> CAShapeLayerLineCap {
+	return CAShapeLayerLineCap(rawValue: input)
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCAShapeLayerLineJoin(_ input: CAShapeLayerLineJoin) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCAShapeLayerLineJoin(_ input: String) -> CAShapeLayerLineJoin {
+	return CAShapeLayerLineJoin(rawValue: input)
 }

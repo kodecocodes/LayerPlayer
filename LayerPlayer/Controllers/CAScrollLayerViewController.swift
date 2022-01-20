@@ -44,7 +44,7 @@ class CAScrollLayerViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    scrollingViewLayer.scrollMode = kCAScrollBoth
+    scrollingViewLayer.scrollMode = .both
   }
   
   // MARK: - IBActions
@@ -57,7 +57,7 @@ class CAScrollLayerViewController: UIViewController {
     scrollingViewLayer.scroll(to: newPoint)
     
     if sender.state == .ended {
-      UIView.animate(withDuration: 0.3, delay: 0, options: UIViewAnimationOptions(), animations: {
+      UIView.animate(withDuration: 0.3, delay: 0, options: [], animations: {
         [unowned self] in
         self.scrollingViewLayer.scroll(to: CGPoint.zero)
         }, completion: nil)
@@ -67,13 +67,13 @@ class CAScrollLayerViewController: UIViewController {
   @IBAction func scrollingSwitchChanged(_ sender: UISwitch) {
     switch (horizontalScrollingSwitch.isOn, verticalScrollingSwitch.isOn) {
     case (true, true):
-      scrollingViewLayer.scrollMode = kCAScrollBoth
+      scrollingViewLayer.scrollMode = .both
     case (true, false):
-      scrollingViewLayer.scrollMode = kCAScrollHorizontally
+      scrollingViewLayer.scrollMode = .horizontally
     case (false, true):
-      scrollingViewLayer.scrollMode = kCAScrollVertically
+      scrollingViewLayer.scrollMode = .vertically
     default:
-      scrollingViewLayer.scrollMode = kCAScrollNone
+      scrollingViewLayer.scrollMode = .none
     }
   }
   

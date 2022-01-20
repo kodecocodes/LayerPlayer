@@ -121,7 +121,7 @@ class CATiledLayerViewController: UIViewController, UIScrollViewDelegate {
   // MARK: - Helpers
   
   func setUpTileImageLayerButton() {
-    tiledImageLayerButton.setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "LayerPlayer", size: 23.0)!], for: UIControlState())
+    tiledImageLayerButton.setTitleTextAttributes([.font: UIFont(name: "LayerPlayer", size: 23.0)!], for: .normal)
   }
   
   func updateFadeDurationSliderValueLabel() {

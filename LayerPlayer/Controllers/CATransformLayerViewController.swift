@@ -69,7 +69,7 @@ class CATransformLayerViewController: UIViewController {
   func setUpSwipeMeTextLayer() {
     swipeMeTextLayer.frame = CGRect(x: 0.0, y: sideLength / 4.0, width: sideLength, height: sideLength / 2.0)
     swipeMeTextLayer.string = "Swipe Me"
-    swipeMeTextLayer.alignmentMode = kCAAlignmentCenter
+    swipeMeTextLayer.alignmentMode = .center
     swipeMeTextLayer.foregroundColor = UIColor.white.cgColor
     let fontName = "Noteworthy-Light" as CFString
     let fontRef = CTFontCreateWithName(fontName, 24.0, nil)

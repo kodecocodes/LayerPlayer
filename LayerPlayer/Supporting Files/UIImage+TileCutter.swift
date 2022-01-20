@@ -67,7 +67,7 @@ extension UIImage {
               let yOffset = CGFloat(y) * tileSize.height
               let point = CGPoint(x: xOffset, y: yOffset)
               
-              if let tileImageRef = imageRef?.cropping(to: CGRect(origin: point, size: tileSize)), let imageData = UIImagePNGRepresentation(UIImage(cgImage: tileImageRef)) {
+              if let tileImageRef = imageRef?.cropping(to: CGRect(origin: point, size: tileSize)), let imageData = UIImage(cgImage: tileImageRef).pngData() {
                 let path = "\(cachesPath)/\(name)_\(x)_\(y).png"
                 try? imageData.write(to: URL(fileURLWithPath: path), options: [])
               }

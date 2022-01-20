@@ -64,7 +64,7 @@ class CALayerControlsViewController: UITableViewController, UIPickerViewDataSour
   }
   
   weak var layerViewController: CALayerViewController!
-  var contentsGravityValues = [kCAGravityCenter, kCAGravityTop, kCAGravityBottom, kCAGravityLeft, kCAGravityRight, kCAGravityTopLeft, kCAGravityTopRight, kCAGravityBottomLeft, kCAGravityBottomRight, kCAGravityResize, kCAGravityResizeAspect, kCAGravityResizeAspectFill] as NSArray
+  var contentsGravityValues = [convertFromCALayerContentsGravity(.center), convertFromCALayerContentsGravity(.top), convertFromCALayerContentsGravity(.bottom), convertFromCALayerContentsGravity(.left), convertFromCALayerContentsGravity(.right), convertFromCALayerContentsGravity(.topLeft), convertFromCALayerContentsGravity(.topRight), convertFromCALayerContentsGravity(.bottomLeft), convertFromCALayerContentsGravity(.bottomRight), convertFromCALayerContentsGravity(.resize), convertFromCALayerContentsGravity(.resizeAspect), convertFromCALayerContentsGravity(.resizeAspectFill)] as NSArray
   var contentsGravityPickerVisible = false
   
   // MARK: - View life cycle
@@ -141,14 +141,14 @@ class CALayerControlsViewController: UITableViewController, UIPickerViewDataSour
     
     switch filter {
     case .linear:
-      filterValue = kCAFilterLinear
+      filterValue = convertFromCALayerContentsFilter(.linear)
     case .nearest:
-      filterValue = kCAFilterNearest
+      filterValue = convertFromCALayerContentsFilter(.nearest)
     case .trilinear:
-      filterValue = kCAFilterTrilinear
+      filterValue = convertFromCALayerContentsFilter(.trilinear)
     }
     
-    layerViewController.layer.magnificationFilter = filterValue
+    layerViewController.layer.magnificationFilter = convertToCALayerContentsFilter(filterValue)
   }
   
   // MARK: - Triggered actions
@@ -156,7 +156,7 @@ class CALayerControlsViewController: UITableViewController, UIPickerViewDataSour
   func showContentsGravityPicker() {
     contentsGravityPickerVisible = true
     relayoutTableViewCells()
-    let index = contentsGravityValues.index(of: layerViewController.layer.contentsGravity)
+    let index = contentsGravityValues.index(of: convertFromCALayerContentsGravity(layerViewController.layer.contentsGravity))
     contentsGravityPicker.selectRow(index, inComponent: 0, animated: false)
     contentsGravityPicker.isHidden = false
     contentsGravityPicker.alpha = 0.0
@@ -187,7 +187,7 @@ class CALayerControlsViewController: UITableViewController, UIPickerViewDataSour
   // MARK: - Helpers
   
   func updateContentsGravityPickerValueLabel() {
-    contentsGravityPickerValueLabel.text = layerViewController.layer.contentsGravity
+    contentsGravityPickerValueLabel.text = convertFromCALayerContentsGravity(layerViewController.layer.contentsGravity)
   }
   
   func updateSliderValueLabels() {
@@ -263,8 +263,28 @@ class CALayerControlsViewController: UITableViewController, UIPickerViewDataSour
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    layerViewController.layer.contentsGravity = contentsGravityValues[row] as! String
+    layerViewController.layer.contentsGravity = convertToCALayerContentsGravity(contentsGravityValues[row] as! String)
     updateContentsGravityPickerValueLabel()
   }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCALayerContentsGravity(_ input: CALayerContentsGravity) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCALayerContentsFilter(_ input: CALayerContentsFilter) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCALayerContentsFilter(_ input: String) -> CALayerContentsFilter {
+	return CALayerContentsFilter(rawValue: input)
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCALayerContentsGravity(_ input: String) -> CALayerContentsGravity {
+	return CALayerContentsGravity(rawValue: input)
 }

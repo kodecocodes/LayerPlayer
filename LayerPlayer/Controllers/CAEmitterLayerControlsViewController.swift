@@ -52,7 +52,7 @@ class CAEmitterLayerControlsViewController: UITableViewController, UIPickerViewD
   var emitterCell: CAEmitterCell {
     return emitterLayerViewController.emitterCell
   }
-  var emitterLayerRenderModes = [kCAEmitterLayerUnordered, kCAEmitterLayerOldestFirst, kCAEmitterLayerOldestLast, kCAEmitterLayerBackToFront, kCAEmitterLayerAdditive] as NSArray
+  var emitterLayerRenderModes = [convertFromCAEmitterLayerRenderMode(.unordered), convertFromCAEmitterLayerRenderMode(.oldestFirst), convertFromCAEmitterLayerRenderMode(.oldestLast), convertFromCAEmitterLayerRenderMode(.backToFront), convertFromCAEmitterLayerRenderMode(.additive)] as NSArray
   var renderModePickerVisible = false
   
   // MARK: - View life cycle
@@ -118,7 +118,7 @@ class CAEmitterLayerControlsViewController: UITableViewController, UIPickerViewD
   func showEmitterLayerRenderModePicker() {
     renderModePickerVisible = true
     relayoutTableViewCells()
-    let index = emitterLayerRenderModes.index(of: emitterLayer.renderMode)
+    let index = emitterLayerRenderModes.index(of: convertFromCAEmitterLayerRenderMode(emitterLayer.renderMode))
     renderModePicker.selectRow(index, inComponent: 0, animated: false)
     renderModePicker.isHidden = false
     renderModePicker.alpha = 0.0
@@ -149,7 +149,7 @@ class CAEmitterLayerControlsViewController: UITableViewController, UIPickerViewD
   // MARK: - Helpers
   
   func updateRenderModePickerValueLabel() {
-    renderModePickerValueLabel.text = emitterLayer.renderMode
+    renderModePickerValueLabel.text = convertFromCAEmitterLayerRenderMode(emitterLayer.renderMode)
   }
   
   func updateSliderValueLabels() {
@@ -222,8 +222,18 @@ class CAEmitterLayerControlsViewController: UITableViewController, UIPickerViewD
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    emitterLayerViewController.emitterLayer.renderMode = emitterLayerRenderModes[row] as! String
+    emitterLayerViewController.emitterLayer.renderMode = convertToCAEmitterLayerRenderMode(emitterLayerRenderModes[row] as! String)
     updateRenderModePickerValueLabel()
   }
   
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCAEmitterLayerRenderMode(_ input: CAEmitterLayerRenderMode) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCAEmitterLayerRenderMode(_ input: String) -> CAEmitterLayerRenderMode {
+	return CAEmitterLayerRenderMode(rawValue: input)
 }
