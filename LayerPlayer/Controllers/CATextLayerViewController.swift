@@ -73,8 +73,8 @@ class CATextLayerViewController: UIViewController {
     textLayer.font = helveticaFont
     textLayer.foregroundColor = UIColor.darkGray.cgColor
     textLayer.isWrapped = true
-    textLayer.alignmentMode = kCAAlignmentLeft
-    textLayer.truncationMode = kCATruncationEnd
+    textLayer.alignmentMode = .left
+    textLayer.truncationMode = .end
     textLayer.contentsScale = UIScreen.main.scale
   }
   
@@ -120,14 +120,14 @@ class CATextLayerViewController: UIViewController {
   
   @IBAction func wrapTextSwitchChanged(_ sender: UISwitch) {
     alignmentModeSegmentedControl.selectedSegmentIndex = AlignmentMode.left.rawValue
-    textLayer.alignmentMode = kCAAlignmentLeft
+    textLayer.alignmentMode = .left
     
     if sender.isOn {
       if let truncationMode = TruncationMode(rawValue: truncationModeSegmentedControl.selectedSegmentIndex) {
         previouslySelectedTruncationMode = truncationMode
       }
       
-      truncationModeSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
+      truncationModeSegmentedControl.selectedSegmentIndex = UISegmentedControl.noSegment
       textLayer.isWrapped = true
     } else {
       textLayer.isWrapped = false
@@ -138,38 +138,38 @@ class CATextLayerViewController: UIViewController {
   @IBAction func alignmentModeSegmentedControlChanged(_ sender: UISegmentedControl) {
     wrapTextSwitch.isOn = true
     textLayer.isWrapped = true
-    truncationModeSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
-    textLayer.truncationMode = kCATruncationNone
+    truncationModeSegmentedControl.selectedSegmentIndex = UISegmentedControl.noSegment
+    textLayer.truncationMode = .none
     
     switch sender.selectedSegmentIndex {
     case AlignmentMode.left.rawValue:
-      textLayer.alignmentMode = kCAAlignmentLeft
+      textLayer.alignmentMode = .left
     case AlignmentMode.center.rawValue:
-      textLayer.alignmentMode = kCAAlignmentCenter
+      textLayer.alignmentMode = .center
     case AlignmentMode.justified.rawValue:
-      textLayer.alignmentMode = kCAAlignmentJustified
+      textLayer.alignmentMode = .justified
     case AlignmentMode.right.rawValue:
-      textLayer.alignmentMode = kCAAlignmentRight
+      textLayer.alignmentMode = .right
     default:
-      textLayer.alignmentMode = kCAAlignmentLeft
+      textLayer.alignmentMode = .left
     }
   }
   
   @IBAction func truncationModeSegmentedControlChanged(_ sender: UISegmentedControl) {
     wrapTextSwitch.isOn = false
     textLayer.isWrapped = false
-    alignmentModeSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
-    textLayer.alignmentMode = kCAAlignmentLeft
+    alignmentModeSegmentedControl.selectedSegmentIndex = UISegmentedControl.noSegment
+    textLayer.alignmentMode = .left
     
     switch sender.selectedSegmentIndex {
     case TruncationMode.start.rawValue:
-      textLayer.truncationMode = kCATruncationStart
+      textLayer.truncationMode = .start
     case TruncationMode.middle.rawValue:
-      textLayer.truncationMode = kCATruncationMiddle
+      textLayer.truncationMode = .middle
     case TruncationMode.end.rawValue:
-      textLayer.truncationMode = kCATruncationEnd
+      textLayer.truncationMode = .end
     default:
-      textLayer.truncationMode = kCATruncationNone
+      textLayer.truncationMode = .none
     }
   }
   

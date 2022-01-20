@@ -134,7 +134,7 @@ class AVPlayerLayerViewController: UIViewController {
   
     @objc func playerDidReachEndNotificationHandler(_ notification: Notification) {
     guard let playerItem = notification.object as? AVPlayerItem else { return }
-    playerItem.seek(to: kCMTimeZero, completionHandler: nil)
+    playerItem.seek(to: .zero, completionHandler: nil)
     
     if shouldLoop == false {
       player.pause()
@@ -148,9 +148,9 @@ class AVPlayerLayerViewController: UIViewController {
   
   func updatePlayButtonTitle() {
     if isPlaying {
-      playButton.setTitle("Pause", for: UIControlState())
+      playButton.setTitle("Pause", for: .normal)
     } else {
-      playButton.setTitle("Play", for: UIControlState())
+      playButton.setTitle("Play", for: .normal)
     }
   }
   
@@ -167,7 +167,7 @@ class AVPlayerLayerViewController: UIViewController {
         break
       }
     } else {
-      rateSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
+      rateSegmentedControl.selectedSegmentIndex = UISegmentedControl.noSegment
     }
   }
   

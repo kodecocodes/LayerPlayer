@@ -44,7 +44,7 @@ class CALayerViewController: UIViewController {
   func setUpLayer() {
     layer.frame = viewForLayer.bounds
     layer.contents = star
-    layer.contentsGravity = kCAGravityCenter
+    layer.contentsGravity = .center
     layer.isGeometryFlipped = false
     layer.cornerRadius = 100.0
     layer.borderWidth = 12.0
@@ -53,7 +53,7 @@ class CALayerViewController: UIViewController {
     layer.shadowOpacity = 0.75
     layer.shadowOffset = CGSize(width: 0, height: 3)
     layer.shadowRadius = 3.0
-    layer.magnificationFilter = kCAFilterLinear
+    layer.magnificationFilter = .linear
   }
   
   // MARK: - View life cycle
